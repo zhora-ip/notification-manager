@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package ntfs;
+option go_package = "./;ntfs";
+
+service NotificationService {
+    rpc CheckEmail(CheckEmailRequest) returns (CheckEmailResponse);
+    rpc Notify(NotifyRequest) returns (NotifyResponse);
+}
+
+message CheckEmailRequest {
+    string email = 1;
+}
+
+message CheckEmailResponse {
+}
+
+message NotifyRequest {
+    string email = 1;
+}
+
+message NotifyResponse {
+}
