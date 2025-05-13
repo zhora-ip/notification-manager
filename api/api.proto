@@ -4,19 +4,41 @@ package ntfs;
 option go_package = "./;ntfs";
 
 service NotificationService {
-    rpc CheckEmail(CheckEmailRequest) returns (CheckEmailResponse);
+    rpc VerifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+    rpc ConfirmEmail (ConfirmationRequest) returns (ConfirmationResponse);
     rpc Notify(NotifyRequest) returns (NotifyResponse);
 }
 
-message CheckEmailRequest {
+enum NotificationType {
+    UNKNOWN = 0;
+    EXPIRED = 1;
+    ACCEPTED = 2;
+}
+
+message VerifyEmailRequest {
     string email = 1;
 }
 
-message CheckEmailResponse {
+message VerifyEmailResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+
+message ConfirmationRequest {
+  string token = 1;
+}
+
+message ConfirmationResponse {
+  bool verified = 1;
+  string message = 2;
 }
 
 message NotifyRequest {
     string email = 1;
+    string name = 2;
+    int64 order_id = 3;
+    NotificationType type = 4; 
 }
 
 message NotifyResponse {
