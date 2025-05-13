@@ -23,12 +23,15 @@ func (s *Server) VerifyEmail(ctx context.Context, req *ntfs.VerifyEmailRequest) 
 	m.SetHeader("Subject", "Подтверждение email")
 
 	link := fmt.Sprintf("https://localhost:8001/verify?token=%s", eToken.Token)
-	body := fmt.Sprintf(`Перейдите по ссылке для подтверждения: <a href="%s">%s</a>`, link, link)
+	body := fmt.Sprintf(`Перейдите по ссылке для подтверждения email в системе:\n <a href="%s">%s</a>`, link, link)
 
 	m.SetBody("text/html", body)
 
+	s.logger.Infow("input", "email", req.GetEmail(), "token", eToken.Token)
+
 	d := gomail.NewDialer("smtp.gmail.com", port, s.email, os.Getenv("MAIL_PASSWORD"))
 	if err := d.DialAndSend(m); err != nil {
+		s.logger.Errorw("send error", "err", err.Error())
 		return nil, status.Error(codes.Internal, "Failed to send email")
 	}
 
